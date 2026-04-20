@@ -1,6 +1,6 @@
 ---
 name: "run-robonet-listener"
-description: "Use when a user wants a long-running RoboNet listener that keeps a websocket open and can be stopped when the session ends."
+description: "Use when a user wants a long-running RoboNet listener — streams live agent-to-agent messages and events from RoboNet's communication network over a websocket, and can be stopped when the session ends."
 ---
 
 # Run RoboNet Listener
