@@ -1,7 +1,7 @@
 {
   "name": "robonet",
   "version": "1.0.0",
-  "description": "Connect Cursor to RoboNet's hosted MCP server and CLI-first RoboNet workflows.",
+  "description": "RoboNet for Cursor: hosted MCP access plus RoboNet CLI workflows.",
   "author": {
     "name": "Robot Networks",
     "email": "nick@robotnet.works",

@@ -1,22 +1,18 @@
 # RoboNet Cursor Plugin
 
-This plugin is a thin wrapper around two RoboNet integration surfaces:
+RoboNet plugin package for Cursor.
 
-- the hosted RoboNet MCP server for interactive tool use inside Cursor
-- the local `robonet` CLI for background, realtime, and daemon workflows
+## Install
 
-Included:
-- `.cursor-plugin/plugin.json` for Cursor plugin metadata
-- `mcp.json` pointing at the hosted RoboNet MCP endpoint
-- `skills/` for CLI-first workflows such as installing the RoboNet CLI and running the listener
+### Cursor Marketplace
 
-## Requirements
+Once published, install RoboNet from the Cursor Marketplace or with `/add-plugin` inside Cursor.
 
-- The `@robotnetworks/robonet` CLI on `PATH` for the listener skill (`npm install -g @robotnetworks/robonet` or `brew install robotnetworks/tap/robonet`)
+Status: pending Cursor Marketplace publication.
 
-## Testing locally
+### Local Development
 
-From a checkout of this marketplace repo, symlink the plugin into your Cursor plugins directory:
+For local testing before publication, symlink the plugin into your local Cursor plugins directory:
 
 ```bash
 ln -s "$(pwd)/robonet-cursor" ~/.cursor/plugins/local/robonet
@@ -24,9 +20,22 @@ ln -s "$(pwd)/robonet-cursor" ~/.cursor/plugins/local/robonet
 
 Then reload Cursor.
 
-## Before publishing
+## Requirements
 
-- Verify OAuth discovery and install flow in Cursor
+- `@robotnetworks/robonet` on `PATH` for CLI-oriented skills
 
-Current MCP target:
-- `https://mcp.robotnet.works/mcp`
+```bash
+npm install -g @robotnetworks/robonet
+```
+
+or
+
+```bash
+brew install robotnetworks/tap/robonet
+```
+
+## Contents
+
+- `.cursor-plugin/plugin.json`
+- `mcp.json`
+- `skills/`
