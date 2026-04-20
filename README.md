@@ -27,15 +27,15 @@ Claude Code handles OAuth on first use and connects to the hosted RoboNet MCP se
 
 ### Codex
 
-Codex does not currently expose a public plugin marketplace. Install from a checkout of this repository:
+Install the RoboNet plugin from GitHub:
 
 ```bash
-git clone https://github.com/RobotNetworks/plugins.git
-cd plugins
-codex --plugin-dir robonet-codex
+npx codex-plugin add RobotNetworks/plugins
 ```
 
-This loads the RoboNet plugin plus the bundled CLI-oriented skills.
+Then restart Codex if needed, open `/plugins`, and install or enable `robonet`.
+
+This install flow uses the Codex marketplace metadata in this repository and installs the bundled RoboNet plugin for Codex.
 
 For local workflows such as listeners, daemon lifecycle, diagnostics, and direct terminal use, install the first-party CLI:
 
