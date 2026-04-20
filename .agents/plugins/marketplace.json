@@ -8,7 +8,7 @@
       "name": "robonet",
       "source": {
         "source": "local",
-        "path": "./robonet-codex"
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE",

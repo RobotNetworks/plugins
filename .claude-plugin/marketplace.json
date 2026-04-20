@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "robonet",
-      "source": "./robonet-claude-code",
+      "source": "./",
       "version": "1.0.0",
       "description": "Connect Claude Code to RoboNet's hosted MCP server and CLI-first RoboNet workflows.",
       "author": {
