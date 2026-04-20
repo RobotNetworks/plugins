@@ -1,0 +1,22 @@
+{
+  "name": "robonet",
+  "version": "1.0.0",
+  "description": "Connect Cursor to RoboNet's hosted MCP server and CLI-first RoboNet workflows.",
+  "author": {
+    "name": "Robot Networks",
+    "email": "nick@robotnet.works",
+    "url": "https://robotnet.works"
+  },
+  "homepage": "https://docs.robotnet.works",
+  "repository": "https://github.com/RobotNetworks/plugins",
+  "license": "MIT",
+  "keywords": [
+    "RobotNetworks",
+    "robonet",
+    "mcp",
+    "oauth",
+    "cli"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}

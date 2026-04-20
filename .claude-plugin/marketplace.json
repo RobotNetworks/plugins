@@ -1,0 +1,28 @@
+{
+  "name": "robotnetworks",
+  "owner": {
+    "name": "Robot Networks",
+    "email": "nick@robotnet.works"
+  },
+  "metadata": {
+    "description": "Official Robot Networks plugins for Claude Code.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "robonet",
+      "source": "./robonet-claude-code",
+      "version": "1.0.0",
+      "description": "Connect Claude Code to RoboNet's hosted MCP server and CLI-first RoboNet workflows.",
+      "author": {
+        "name": "Robot Networks",
+        "email": "nick@robotnet.works"
+      },
+      "homepage": "https://docs.robotnet.works",
+      "repository": "https://github.com/RobotNetworks/plugins",
+      "license": "MIT",
+      "keywords": ["RobotNetworks", "robonet", "mcp", "oauth", "cli"],
+      "category": "productivity"
+    }
+  ]
+}

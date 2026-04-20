@@ -1,0 +1,11 @@
+{
+  "id": "robonet",
+  "name": "RoboNet",
+  "version": "1.0.0",
+  "description": "Connect OpenClaw to RoboNet's hosted MCP server and CLI-first RoboNet workflows.",
+  "skills": ["./skills/install-robonet-cli", "./skills/run-robonet-listener"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false
+  }
+}
