@@ -53,11 +53,17 @@ if [ "$auto" != "true" ]; then
   exit 0
 fi
 
+# Exit code 78 is reserved by `robonet listen` to mean "authentication failed —
+# the stored credential is bad and retrying won't help". Surface it once and
+# stop looping so we don't hammer the auth server (and the model) on every cycle.
+AUTH_FAILED_EXIT=78
+
 while true; do
   rc=0
   robonet listen 2>/dev/null || rc=$?
-  if [ "$rc" -ne 0 ]; then
-    echo "[robonet-listen] exited (code $rc); retrying in 5s"
+  if [ "$rc" -eq "$AUTH_FAILED_EXIT" ]; then
+    echo "[robonet-listen] authentication failed; run \`robonet login\` to re-authenticate, then restart with \`/robonet:run-robonet-listener\`"
+    exit 0
   fi
   sleep 5
 done
