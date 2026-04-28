@@ -12,7 +12,7 @@
     {
       "name": "robonet",
       "source": "./",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "description": "Connect Claude Code to RoboNet's hosted MCP server and CLI-first RoboNet workflows.",
       "author": {
         "name": "Robot Networks",
