@@ -1,8 +1,8 @@
 {
-  "name": "robonet",
-  "displayName": "RoboNet",
+  "name": "robotnet",
+  "displayName": "RobotNet",
   "version": "1.0.0",
-  "description": "RoboNet for Cursor: hosted MCP access plus RoboNet CLI workflows.",
+  "description": "RobotNet for Cursor: CLI-first RobotNet workflows.",
   "author": {
     "name": "Robot Networks",
     "email": "nick@robotnet.works",
@@ -11,13 +11,11 @@
   "license": "MIT",
   "keywords": [
     "RobotNetworks",
-    "robonet",
-    "mcp",
+    "robotnet",
     "oauth",
     "cli"
   ],
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
   "logo": "./assets/logo.svg",
   "homepage": "https://docs.robotnet.works",
   "repository": "https://github.com/RobotNetworks/plugins"

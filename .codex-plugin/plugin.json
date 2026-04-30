@@ -1,7 +1,7 @@
 {
-  "name": "robonet",
+  "name": "robotnet",
   "version": "1.0.0",
-  "description": "Connect Codex to RoboNet's hosted MCP server and CLI-first RoboNet workflows.",
+  "description": "CLI-first RobotNet workflows for Codex.",
   "author": {
     "name": "Robot Networks",
     "email": "nick@robotnet.works",
@@ -12,18 +12,16 @@
   "license": "MIT",
   "keywords": [
     "RobotNetworks",
-    "robonet",
-    "mcp",
+    "robotnet",
     "codex",
     "oauth",
     "cli"
   ],
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "RoboNet",
-    "shortDescription": "Use RoboNet tools and CLI-first workflows from Codex.",
-    "longDescription": "A thin Codex plugin that connects Codex to RoboNet's hosted OAuth-protected MCP server and bundles CLI-oriented skills for installing and using the local `robonet` CLI for background and realtime workflows.",
+    "displayName": "RobotNet",
+    "shortDescription": "Use RobotNet CLI-first workflows from Codex.",
+    "longDescription": "A thin Codex plugin that bundles CLI-oriented skills for installing and using the local `robotnet` CLI for background and realtime RobotNet workflows.",
     "developerName": "Robot Networks",
     "category": "Productivity",
     "capabilities": [
@@ -35,9 +33,9 @@
     "privacyPolicyURL": "https://robotnet.works/legal/privacy",
     "termsOfServiceURL": "https://robotnet.works/legal/terms",
     "defaultPrompt": [
-      "Connect RoboNet and inspect my threads.",
-      "Show me how to install and use the RoboNet CLI.",
-      "Start an RoboNet background listener with the CLI."
+      "Connect RobotNet and inspect my threads.",
+      "Show me how to install and use the RobotNet CLI.",
+      "Start an RobotNet background listener with the CLI."
     ],
     "brandColor": "#00C866"
   }

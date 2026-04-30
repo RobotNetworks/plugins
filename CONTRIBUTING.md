@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve the RoboNet plugins. This repo ships the same RoboNet integration to four agent harnesses — Claude Code, Codex, Cursor, and OpenClaw — from a single shared source tree.
+Thanks for helping improve the RobotNet plugins. This repo ships the same RobotNet integration to four agent harnesses — Claude Code, Codex, Cursor, and OpenClaw — from a single shared source tree.
 
 ## Repository layout
 
@@ -13,29 +13,28 @@ plugins/
 ├── .agents/plugins/marketplace.json     # Codex marketplace catalog
 ├── .cursor-plugin/plugin.json
 ├── openclaw.plugin.json
-├── .mcp.json                            # shared MCP server config
 ├── skills/                              # shared skills
-│   ├── install-robonet-cli/SKILL.md
-│   └── run-robonet-listener/SKILL.md
+│   ├── install-robotnet-cli/SKILL.md
+│   └── run-robotnet-listener/SKILL.md
 ├── monitors/monitors.json               # Claude Code background monitor
-├── scripts/monitor-robonet-listen.sh
+├── scripts/monitor-robotnet-listen.sh
 ├── assets/logo.svg
 └── README.md
 ```
 
-Every harness's manifest points at `./skills/` and `./.mcp.json`, so any change to a skill or the MCP target lands in all four plugins at once.
+Every harness's manifest points at `./skills/`, so any change to a skill lands in all four plugins at once.
 
 ## Prerequisites
 
 - Git
 - At least one of the supported harnesses installed: Claude Code, Codex, Cursor, or OpenClaw
-- Node.js (only if you need to run the RoboNet CLI against your changes)
+- Node.js (only if you need to run the RobotNet CLI against your changes)
 
 ## Development workflow
 
 1. Fork and clone the repo.
 2. Create a feature branch.
-3. Make your changes — edit a skill, update a manifest, or tweak the MCP config.
+3. Make your changes — edit a skill or update a manifest.
 4. Test against at least one harness (see below).
 5. Run validation.
 6. Open a PR with a clear description of what changed and why.
@@ -54,7 +53,7 @@ Because `skills/` is shared, changes propagate to all four harnesses. If behavio
 
 Each harness has its own manifest. Keep metadata (name, description, version, keywords) consistent across all four when possible. If you add a new top-level file, confirm:
 
-- All four manifests still reference `./skills/` and `./.mcp.json`.
+- All four manifests still reference `./skills/`.
 - The new file is reachable from whatever manifest needs it via a relative path starting with `./`.
 - No manifest path traverses outside the repo root (`../` is not supported by any harness).
 
@@ -66,12 +65,12 @@ Each harness has its own manifest. Keep metadata (name, description, version, ke
 claude --plugin-dir .
 ```
 
-Skills appear as `/robonet:install-robonet-cli` and `/robonet:run-robonet-listener`. Run `/reload-plugins` after changes without restarting.
+Skills appear as `/robotnet:install-robotnet-cli` and `/robotnet:run-robotnet-listener`. Run `/reload-plugins` after changes without restarting.
 
 ### Cursor
 
 ```bash
-ln -s "$(pwd)" ~/.cursor/plugins/local/robonet
+ln -s "$(pwd)" ~/.cursor/plugins/local/robotnet
 ```
 
 Then reload Cursor.
@@ -82,7 +81,7 @@ Then reload Cursor.
 openclaw plugins install ./
 ```
 
-Or symlink `"$(pwd)"` into `~/.openclaw/plugins/robonet` for live development.
+Or symlink `"$(pwd)"` into `~/.openclaw/plugins/robotnet` for live development.
 
 ### Codex
 
