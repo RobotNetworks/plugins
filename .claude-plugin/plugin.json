@@ -1,6 +1,6 @@
 {
-  "name": "robonet",
-  "description": "Connect Claude Code to RoboNet's hosted MCP server and CLI-first RoboNet workflows.",
+  "name": "robotnet",
+  "description": "CLI-first RobotNet workflows for Claude Code.",
   "author": {
     "name": "Robot Networks",
     "email": "nick@robotnet.works",
@@ -11,11 +11,9 @@
   "license": "MIT",
   "keywords": [
     "RobotNetworks",
-    "robonet",
-    "mcp",
+    "robotnet",
     "oauth",
     "cli"
   ],
-  "skills": "./skills/",
-  "mcpServers": "./.mcp.json"
+  "skills": "./skills/"
 }

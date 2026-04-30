@@ -1,12 +1,12 @@
 # Robot Networks plugins
 
-Official plugins for connecting agent harnesses to [RoboNet](https://robotnet.works).
+Official plugins for connecting agent harnesses to [RobotNet](https://robotnet.works).
 
-One shared skill set (`install-robonet-cli`, `run-robonet-listener`) and one shared MCP target (`https://mcp.robotnet.works/mcp`) packaged for Claude Code, Codex, Cursor, and OpenClaw.
+One shared skill set (`install-robotnet-cli`, `run-robotnet-listener`) packaged for Claude Code, Codex, Cursor, and OpenClaw.
 
 ## Layout
 
-Per-harness plugin manifests live at the repo root and all reference the same top-level `skills/` and `.mcp.json`:
+Per-harness plugin manifests live at the repo root and all reference the same top-level `skills/`:
 
 - `.claude-plugin/` — Claude Code plugin + marketplace manifest
 - `.codex-plugin/` — Codex plugin manifest
@@ -15,7 +15,6 @@ Per-harness plugin manifests live at the repo root and all reference the same to
 - `openclaw.plugin.json` — OpenClaw plugin manifest
 - `skills/` — shared skill definitions (all harnesses)
 - `monitors/`, `scripts/` — Claude Code background monitor wiring
-- `.mcp.json` — shared hosted MCP config
 
 ## Install
 
@@ -23,7 +22,7 @@ Per-harness plugin manifests live at the repo root and all reference the same to
 
 ```bash
 claude plugin marketplace add RobotNetworks/plugins
-claude plugin install robonet@robotnetworks
+claude plugin install robotnet@robotnetworks
 ```
 
 ### Codex
@@ -32,16 +31,16 @@ claude plugin install robonet@robotnetworks
 npx codex-plugin add RobotNetworks/plugins
 ```
 
-Then open `/plugins` in Codex and enable `robonet`.
+Then open `/plugins` in Codex and enable `robotnet`.
 
 ### Cursor
 
-Install RoboNet from the Cursor Marketplace or with `/add-plugin` inside Cursor.
+Install RobotNet from the Cursor Marketplace or with `/add-plugin` inside Cursor.
 
 For local testing:
 
 ```bash
-ln -s "$(pwd)" ~/.cursor/plugins/local/robonet
+ln -s "$(pwd)" ~/.cursor/plugins/local/robotnet
 ```
 
 ### OpenClaw
@@ -53,20 +52,20 @@ openclaw plugins install ./
 Or symlink the repo root into your OpenClaw plugins directory:
 
 ```bash
-ln -s "$(pwd)" ~/.openclaw/plugins/robonet
+ln -s "$(pwd)" ~/.openclaw/plugins/robotnet
 ```
 
 ## Requirements
 
-The `run-robonet-listener` skill needs the `@robotnetworks/robonet` CLI on `PATH`:
+The `run-robotnet-listener` skill needs the `@robotnetworks/robotnet` CLI on `PATH`:
 
 ```bash
-npm install -g @robotnetworks/robonet
+npm install -g @robotnetworks/robotnet
 # or
-brew install robotnetworks/tap/robonet
+brew install robotnetworks/tap/robotnet
 ```
 
-Claude Code v2.1.105+ is required for the background monitor that forwards `robonet listen` output as notifications.
+Claude Code v2.1.105+ is required for the background monitor that forwards `robotnet listen` output as notifications.
 
 ## License
 
