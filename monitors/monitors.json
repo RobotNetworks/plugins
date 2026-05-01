@@ -1,7 +1,7 @@
 [
   {
-    "name": "robonet-listen",
-    "command": "sh ${CLAUDE_PLUGIN_ROOT}/scripts/monitor-robonet-listen.sh",
-    "description": "Stream RoboNet CLI listener events to Claude in the background."
+    "name": "robotnet-listen",
+    "command": "sh ${CLAUDE_PLUGIN_ROOT}/scripts/monitor-robotnet-listen.sh",
+    "description": "Stream RobotNet CLI listener events to Claude in the background."
   }
 ]
