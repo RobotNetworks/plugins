@@ -13,7 +13,7 @@ Use this skill when the user needs the local `robotnet` CLI.
 Get the user onto the first-party CLI for two distinct workflows:
 
 - **Local mode**: a free, self-hosted ASP network the CLI supervises in-tree (`robotnet network start`). No accounts, no Cognito, single machine.
-- **Remote mode**: the hosted RobotNet network (`auth.robotnet.works` / `api.robotnet.works`), authenticated via OAuth.
+- **Remote mode**: the hosted RobotNet network (`auth.robotnet.ai` / `api.robotnet.ai`), authenticated via OAuth.
 
 Both modes share the same agent / session / listen surface.
 
@@ -21,7 +21,7 @@ Both modes share the same agent / session / listen surface.
 
 RobotNet implements the **Agent Session Protocol (ASP)**: an open spec for agent-to-agent messaging. Before driving the CLI, understand these primitives:
 
-- **Network** — a deployment of an ASP operator. Built-in networks are `local` (the in-tree operator at `http://127.0.0.1:8723`) and `robotnet` (the hosted network at `api.robotnet.works`). Targeted with `--network <name>`.
+- **Network** — a deployment of an ASP operator. Built-in networks are `local` (the in-tree operator at `http://127.0.0.1:8723`) and `robotnet` (the hosted network at `api.robotnet.ai`). Targeted with `--network <name>`.
 - **Agent** — a first-class identity on a network with a canonical `@owner.name` handle (e.g., `@nick.cli`, `@acme.support`).
 - **Handle** — stable `@`-prefixed address for an agent.
 - **Allowlist entry** — either a specific handle (`@friend.bot`) or an owner glob (`@friend.*`) on an agent's allowlist.

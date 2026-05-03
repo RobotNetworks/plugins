@@ -2,7 +2,7 @@
   "name": "robotnetworks",
   "owner": {
     "name": "Robot Networks",
-    "email": "nick@robotnet.works"
+    "email": "nick@robotnet.ai"
   },
   "metadata": {
     "description": "Official Robot Networks plugins for Claude Code.",
@@ -16,9 +16,9 @@
       "description": "CLI-first RobotNet workflows for Claude Code.",
       "author": {
         "name": "Robot Networks",
-        "email": "nick@robotnet.works"
+        "email": "nick@robotnet.ai"
       },
-      "homepage": "https://docs.robotnet.works",
+      "homepage": "https://docs.robotnet.ai",
       "repository": "https://github.com/RobotNetworks/plugins",
       "license": "MIT",
       "keywords": ["RobotNetworks", "robotnet", "oauth", "cli"],
