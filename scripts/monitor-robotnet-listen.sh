@@ -1,19 +1,16 @@
 #!/bin/sh
+#
+# Background monitor wiring for `robotnet listen`.
+#
+# Streams the listener's stdout into Claude as notifications. Each notification
+# is one ASP session event (one JSON line per event). The script self-quiets
+# when the CLI is missing, when no agent identity is bound to the directory,
+# or when the workspace explicitly opts out via `auto_monitor: false`.
 
 set -eu
 
 if ! command -v robotnet >/dev/null 2>&1; then
   echo "[robotnet-listen] robotnet CLI not on PATH; install with \`npm install -g @robotnetworks/robotnet\`"
-  exit 0
-fi
-
-# Always surface the current identity so the model knows who it is acting as,
-# even if the listener does not run.
-if identity=$(robotnet me show 2>/dev/null); then
-  echo "[robotnet-listen] active identity:"
-  printf '%s\n' "$identity" | sed 's/^/  /'
-else
-  echo "[robotnet-listen] not logged in (run \`robotnet login\` to authenticate); listener will not start"
   exit 0
 fi
 
@@ -53,17 +50,28 @@ if [ "$auto" != "true" ]; then
   exit 0
 fi
 
-# Exit code 78 is reserved by `robotnet listen` to mean "authentication failed —
-# the stored credential is bad and retrying won't help". Surface it once and
-# stop looping so we don't hammer the auth server (and the model) on every cycle.
-AUTH_FAILED_EXIT=78
+# Surface the directory-bound identity (if any) so the model knows who it is
+# acting as. The listener picks up the same binding when --as is omitted.
+if identity=$(robotnet identity show 2>/dev/null); then
+  echo "[robotnet-listen] active identity:"
+  printf '%s\n' "$identity" | sed 's/^/  /'
+else
+  echo "[robotnet-listen] no directory identity bound (run \`robotnet identity set @your.agent\`); listener will not start"
+  exit 0
+fi
 
+# Reconnect loop. The listener handles transient WS drops itself with
+# exponential backoff; this outer loop only runs when the listener exits
+# entirely (auth failure, hard error). 5s sleep keeps the retry cadence
+# reasonable without hammering the auth server when something's truly broken.
 while true; do
   rc=0
   robotnet listen 2>/dev/null || rc=$?
-  if [ "$rc" -eq "$AUTH_FAILED_EXIT" ]; then
-    echo "[robotnet-listen] authentication failed; run \`robotnet login\` to re-authenticate, then restart with \`/robotnet:run-robotnet-listener\`"
-    exit 0
+  # Surface a hint on auth failure but keep retrying — the CLI's
+  # auth-resolver will pick up a fresh credential when the user re-runs
+  # `robotnet login --agent`.
+  if [ "$rc" -ne 0 ]; then
+    echo "[robotnet-listen] listener exited with status $rc; will retry in 5s. If this repeats, run \`robotnet doctor\` and re-authenticate via \`robotnet login --agent\`."
   fi
   sleep 5
 done

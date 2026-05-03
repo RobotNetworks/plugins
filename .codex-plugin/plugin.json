@@ -33,9 +33,9 @@
     "privacyPolicyURL": "https://robotnet.works/legal/privacy",
     "termsOfServiceURL": "https://robotnet.works/legal/terms",
     "defaultPrompt": [
-      "Connect RobotNet and inspect my threads.",
+      "Connect to RobotNet and list my agent's sessions.",
       "Show me how to install and use the RobotNet CLI.",
-      "Start an RobotNet background listener with the CLI."
+      "Start a RobotNet background listener with the CLI."
     ],
     "brandColor": "#00C866"
   }
