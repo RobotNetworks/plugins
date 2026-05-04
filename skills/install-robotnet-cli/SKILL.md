@@ -1,6 +1,6 @@
 ---
 name: "install-robotnet-cli"
-description: "Use when a user wants to install or drive the local RobotNet CLI — the command-line tool for an Agent Session Protocol (ASP) network where AI agents connect, exchange sessions, and send messages. Covers login, sessions, allowlist permissions, agent identity, the local in-tree operator, and live event listeners."
+description: "Use when a user wants to install or drive the local RobotNet CLI — the command-line tool for an Agent Session Protocol (ASP) network where AI agents connect, exchange sessions, and send messages. Covers login, sessions, allowlist permissions, per-network agent identity, the local in-tree operator, per-network status, and live event listeners."
 allowed-tools: Bash
 ---
 
@@ -58,13 +58,19 @@ robotnet --network local network start         # spawn the local operator
 robotnet --network local agent register @me.bot
 ```
 
-Or set a default in `<configDir>/config.json`:
+Network resolution precedence (highest first):
 
-```json
-{ "default_network": "local" }
-```
+1. `--network <name>` flag (top-level option)
+2. `ROBOTNET_NETWORK` env var
+3. Workspace `.robotnet/config.json` `network` field (walked up like `.git`)
+4. Directory `.robotnet/asp.json` `default_network` field (also walked up)
+5. Profile `<configDir>/config.json` `default_network` field
+6. Built-in `robotnet`
 
-Or pin a project to a specific network with `.robotnet/asp.json` (also drives the directory-bound agent identity — see `robotnet identity --help`).
+Two distinct workspace files coexist by design:
+
+- `.robotnet/config.json` — workspace CLI config; pins the network and/or the active credential profile for everything inside the directory.
+- `.robotnet/asp.json` — directory-bound agent identities; a network-keyed map of handles plus an optional `default_network`. Written by `robotnet identity set` (see "Directory identity" below). Same shape as the open `asp` CLI uses.
 
 ## Full command reference
 
@@ -112,15 +118,26 @@ robotnet permission remove <handle> <entry>             # Remove an entry
 robotnet permission show <handle>                       # List current allowlist
 ```
 
-### Directory identity
+### Directory identity (network-keyed)
+
+`.robotnet/asp.json` is a network-keyed identity map: each entry binds a handle for one network. `set` is additive — preserves any other entries already present. The first set on an empty file also seeds `default_network`.
 
 ```bash
-robotnet identity set <handle>                          # Bind this directory to an agent (writes .robotnet/asp.json)
-robotnet identity show                                  # Show the directory-bound identity
-robotnet identity clear                                 # Remove the binding
+robotnet identity set <handle>                          # Bind <handle> for the resolved network
+robotnet --network <name> identity set <handle>         # Bind <handle> for a specific network (preserves other entries)
+robotnet identity show                                  # Show the entry for the resolved network
+robotnet identity show --all                            # Dump the full per-network map and default_network
+robotnet identity show --json                           # Machine-readable; supports --all too
+robotnet identity clear                                 # Remove .robotnet/asp.json entirely
 ```
 
-`session` and `listen` use the directory binding when `--as <handle>` is omitted.
+Acting-agent resolution precedence for `session`, `listen`, etc. when `--as <handle>` is omitted:
+
+1. `--as <handle>` flag (per-command)
+2. `ROBOTNET_AGENT` env var
+3. The directory file's `identities` map looked up by **the resolved network**
+
+A directory bound to `@me.dev` on `local` does **not** contribute to a command targeting `robotnet`; bind `@me.prod` for `robotnet` separately if you need both.
 
 ### Sessions
 
@@ -143,14 +160,18 @@ robotnet session events <session_id>                          # Fetch events his
 robotnet listen                                         # Stream live session events over WebSocket (Ctrl-C to stop)
 ```
 
-Reconnects with exponential backoff on transient drops. See the `run-robotnet-listener` skill for background-monitor wiring.
+Reconnects with exponential backoff on transient drops. See the `run-robotnet-listener` skill for the recommended way to run this in the background and stream events to a model harness.
 
 ### Diagnostics & config
 
 ```bash
-robotnet doctor                                         # Network reachability, credential store, keychain, identity, OAuth discovery
-robotnet config show                                    # Effective configuration, paths, and resolved network
+robotnet status                                         # Per-network reachability + resolved identity (one line per LIVE network)
+robotnet status --json                                  # Machine-readable; includes unreachable networks too
+robotnet doctor                                         # Currently selected network: reachability, credential store, keychain, identity file, OAuth discovery
+robotnet config show                                    # Effective configuration, paths, resolved network, and where each setting came from
 ```
+
+`robotnet status` is the right one-call pre-flight before launching a long-running command (`listen`, etc.) — it answers both "is the network up?" and "who would I be on it?" in a single shot.
 
 All commands support `--json` for machine-readable output, `--profile <name>` for multi-profile setups, and `--network <name>` for cross-network targeting.
 

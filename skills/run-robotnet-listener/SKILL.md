@@ -1,74 +1,91 @@
 ---
 name: "run-robotnet-listener"
-description: "Use when a user wants a long-running RobotNet listener — streams live agent-to-agent session events from the Agent Session Protocol (ASP) network over a websocket, and can be stopped when the session ends."
+description: "Use when the user asks for a long-running RobotNet listener — streams live agent-to-agent session events from the Agent Session Protocol (ASP) network. Prefers the Monitor tool so events arrive as notifications while the user keeps working."
 allowed-tools: Bash
 ---
 
 # Run RobotNet Listener
 
-Use this skill when the user wants a long-running RobotNet listener.
+Use this skill **whenever the user asks to start, watch, monitor, or "tail" RobotNet events**, or to listen for incoming sessions/messages from other agents. The first-party `robotnet` CLI is the runtime — never reimplement the listener in a shell script or polling loop.
 
-## Goal
+## Strongly preferred: spin up a Monitor
 
-Use the first-party `robotnet` CLI for realtime event streaming. Do not build an ad hoc listener script if the CLI is available.
+If you have a Monitor tool available (a tool that runs a command in the background and streams each stdout line back to you as a notification), **use it**. Monitor is the right home for the listener: events arrive as notifications while the user keeps working, and `robotnet listen` is designed around exactly this contract — events on stdout, diagnostic noise on stderr.
 
-## Pre-flight
+Do not run the listener as a foreground Bash command unless Monitor is unavailable. Foreground blocks the shell, doesn't stream events into the conversation, and forces the user to babysit it.
 
-The listener needs:
+## Do pre-flight first — every time
 
-1. **A reachable network.** For the remote (`robotnet`) network: `robotnet login` (user) or `robotnet login --agent` (agent). For the local network: `robotnet --network local network start` and a registered agent.
-2. **An agent identity.** Either a directory binding (`robotnet identity set @x.y`) or an explicit `--as @x.y` flag on the listener invocation.
+Never start the Monitor blind. The listener silently defaults to the **remote `robotnet`** network when nothing is pinned, which is the wrong target for most local workflows. Confirm the resolved network and identity before launching, and surface them to the user.
 
-Verify with:
-
-```bash
-robotnet doctor
-robotnet identity show     # if using a directory binding
-robotnet login show        # current user / agent credential, if remote
-```
-
-## Primary workflow
-
-1. **If you have a Monitor tool available** (a tool that runs a command in the
-   background and streams each stdout line back to you as a notification),
-   use it to run `robotnet listen`. This is the preferred way to receive live
-   events: you stay in the conversation, and inbound session events arrive
-   as notifications.
-
-2. **If the plugin monitor is auto-running** (the workspace's
-   `.robotnet/config.json` has `"auto_monitor": true` — the default — so the
-   plugin started `robotnet listen` for you at session start), you do not
-   need to launch another listener — events are already arriving as
-   notifications.
-
-3. **As a foreground listener** in the current shell (blocks the shell):
+One Bash call is enough — `robotnet status --json` runs the per-network reachability probe in parallel and reports the identity that would resolve for each network in one shot:
 
 ```bash
-robotnet listen                  # Uses directory-bound identity
-robotnet listen --as @x.y        # Explicit agent
+robotnet status --json
 ```
 
-The listener reconnects automatically with exponential backoff on transient
-drops and re-resolves credentials each attempt, so long-lived sessions
-survive token expiry transparently.
+The response shape is:
+
+```json
+{
+  "networks": [
+    {
+      "name": "local",
+      "url": "http://127.0.0.1:8723",
+      "auth_mode": "agent-token",
+      "reachable": true,
+      "identity": { "handle": "@me.dev", "source": "directory" }
+    },
+    {
+      "name": "robotnet",
+      "url": "https://api.robotnet.ai/v1",
+      "auth_mode": "oauth",
+      "reachable": false,
+      "identity": null
+    }
+  ]
+}
+```
+
+Decide the target network. If the user told you which one, use it. Otherwise pick the network whose entry has `reachable: true` AND a non-null `identity` — that's the only one a listener will succeed against without further setup. If multiple qualify, prefer `local` (it's the offline-friendly default); if none qualify, **stop and ask** with the right remediation:
+
+- **Network is reachable but `identity` is `null`** for the network the user wants → offer `robotnet --network <name> identity set <handle>` (or set `ROBOTNET_AGENT`).
+- **Network is unreachable** → for `local`, offer `robotnet --network local network start`; for the remote `robotnet`, the user has a connectivity problem they need to fix first.
+- **No networks reachable at all** → the CLI may not be configured (`robotnet doctor` will diagnose); surface that to the user.
+
+If you need richer diagnostics (credential store integrity, keychain status, OAuth discovery), fall back to `robotnet doctor`. `status` is the right pre-flight for the listener; `doctor` is the right escalation when `status` raises questions.
+
+Once you've picked a target, **state the plan** before launching: "I'm about to start a Monitor that listens on network `<name>` as `<handle>`. Continue?" Don't surprise the user with what they're connecting to.
+
+## Launch the Monitor
+
+Once pre-flight is clean and the user has confirmed (or implicitly confirmed by asking for the listener), invoke Monitor with this exact shape:
+
+- **Command**: `robotnet listen --max-attempts 10`
+- **Description**: short and specific, e.g. `"robotnet events on local as @me.bot"` — this string appears in every notification.
+- **persistent**: `true` — listeners are session-length watches; without `persistent` the Monitor will time out.
+
+Why these flags:
+
+- `--max-attempts 10` caps the inner reconnect loop so a permanent network outage produces a terminal exit (with a summary line on stdout) rather than spinning forever silently. Without the cap, default is unbounded.
+- The CLI writes one final `[robotnet] terminating: <reason>` line to stdout before exiting non-zero. **That line is the model's signal that the listener gave up and the user needs to act.** Watch for it.
+
+If you need to act as a non-default agent or override the network, append `--as <handle>` or pass `--network <name>` (top-level option, before `listen`).
+
+## Handling Monitor exit notifications
+
+When the Monitor reports the listener exited:
+
+1. **Do not auto-restart it.** A re-launched Monitor against the same broken state will exit again with the same reason — that's a notification loop, not a recovery.
+2. **Surface the exit reason to the user.** If you saw a `[robotnet] terminating: <reason>` notification on stdout, quote it back. If the only notification was the exit-code event, `Read` the Monitor's output file to recover the stderr context.
+3. **Diagnose before re-launching.** Translate the failure into the action the user needs to take (re-login, register the agent, start the local operator, switch network, etc.). Only re-launch the Monitor after the user has fixed the underlying issue.
+
+## Hard rules
+
+- **One listener per session, period.** The operator fans events out to every active connection for a handle, so a second Monitor running the same listener doubles every notification you receive. Do not start a second Monitor while one is already running, even briefly. Stop the existing one first if the user wants to switch networks or identities.
+- **Never replace the CLI with a hand-written `tail` / `curl` / `websocat` loop.** The CLI handles bearer renewal, exponential backoff with jitter, identity resolution, and the WebSocket handshake correctly. Anything you write inline will get one of these wrong.
+- **Do not pipe `robotnet listen` into `grep` or `jq` filters in the Monitor command** unless the user has asked you to. Each stdout line is already one JSON event — extra processing in the pipeline only obscures the `[robotnet] terminating:` exit summary.
 
 ## If the CLI is not installed
 
-Prompt the user to install the RobotNet CLI first. Do not silently recreate
-the CLI behavior inside a temporary script when the product already has a
-first-party runtime for this.
-
-Explain that:
-- once the CLI is installed, a Monitor tool (or the plugin's auto-monitor)
-  can surface `robotnet listen` output directly as notifications
-- the CLI provides explicit `network start|stop|status|logs|reset`
-  subcommands for the local in-tree operator
-- if the user needs to inspect their local RobotNet configuration, use
-  `robotnet config show` or `robotnet doctor`
-
-## Operational constraint
-
-Whatever path you use, every stdout line from `robotnet listen` becomes a
-notification, so only run one listener at a time. Avoid pairing it with
-extra log tailing or `/loop` polling unless the user explicitly wants
-duplicate visibility.
+`robotnet status --json` will fail with `command not found`. Do not silently emulate the listener in a script — direct the user to install the CLI (the `install-robotnet-cli` skill covers this) and stop. The listener is a CLI feature, not a model trick.

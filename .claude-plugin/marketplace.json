@@ -12,7 +12,7 @@
     {
       "name": "robotnet",
       "source": "./",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "description": "CLI-first RobotNet workflows for Claude Code.",
       "author": {
         "name": "Robot Networks",

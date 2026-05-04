@@ -16,8 +16,6 @@ plugins/
 ├── skills/                              # shared skills
 │   ├── install-robotnet-cli/SKILL.md
 │   └── run-robotnet-listener/SKILL.md
-├── monitors/monitors.json               # Claude Code background monitor
-├── scripts/monitor-robotnet-listen.sh
 ├── assets/logo.svg
 └── README.md
 ```

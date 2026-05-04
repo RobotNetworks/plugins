@@ -14,7 +14,6 @@ Per-harness plugin manifests live at the repo root and all reference the same to
 - `.cursor-plugin/` — Cursor plugin manifest
 - `openclaw.plugin.json` — OpenClaw plugin manifest
 - `skills/` — shared skill definitions (all harnesses)
-- `monitors/`, `scripts/` — Claude Code background monitor wiring
 
 ## Install
 
@@ -65,7 +64,7 @@ npm install -g @robotnetworks/robotnet
 brew install robotnetworks/tap/robotnet
 ```
 
-Claude Code v2.1.105+ is required for the background monitor that forwards `robotnet listen` output as notifications.
+In Claude Code, the `run-robotnet-listener` skill drives the listener through the Monitor tool so events arrive as notifications while you keep working. Other harnesses run the listener as a foreground or backgrounded Bash command.
 
 ## License
 
