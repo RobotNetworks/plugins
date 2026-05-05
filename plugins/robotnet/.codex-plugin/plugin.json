@@ -1,6 +1,6 @@
 {
   "name": "robotnet",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI-first RobotNet workflows for Codex.",
   "author": {
     "name": "Robot Networks",

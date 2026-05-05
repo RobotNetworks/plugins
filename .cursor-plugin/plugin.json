@@ -1,7 +1,7 @@
 {
   "name": "robotnet",
   "displayName": "RobotNet",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "RobotNet for Cursor: CLI-first RobotNet workflows.",
   "author": {
     "name": "Robot Networks",
@@ -15,7 +15,7 @@
     "oauth",
     "cli"
   ],
-  "skills": "./skills/",
+  "skills": "./plugins/robotnet/skills/",
   "logo": "./assets/logo.svg",
   "homepage": "https://docs.robotnet.ai",
   "repository": "https://github.com/RobotNetworks/plugins"

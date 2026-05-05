@@ -6,14 +6,15 @@ One shared skill set (`install-robotnet-cli`, `run-robotnet-listener`) packaged 
 
 ## Layout
 
-Per-harness plugin manifests live at the repo root and all reference the same top-level `skills/`:
+The canonical plugin payload (skills + Codex manifest) lives under `plugins/robotnet/` so the Codex marketplace installer (`npx codex-plugin add`) finds it where it expects. Per-harness manifests for the other three harnesses live at the repo root and reference the same shared skills:
 
 - `.claude-plugin/` — Claude Code plugin + marketplace manifest
-- `.codex-plugin/` — Codex plugin manifest
-- `.agents/plugins/` — Codex marketplace manifest
 - `.cursor-plugin/` — Cursor plugin manifest
+- `.agents/plugins/` — Codex marketplace catalog
 - `openclaw.plugin.json` — OpenClaw plugin manifest
-- `skills/` — shared skill definitions (all harnesses)
+- `plugins/robotnet/.codex-plugin/` — Codex plugin manifest
+- `plugins/robotnet/skills/` — shared skill definitions (all harnesses point here)
+- `hooks/session-start.sh` — Claude Code SessionStart hook
 
 ## Install
 

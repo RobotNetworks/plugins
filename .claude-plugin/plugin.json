@@ -15,7 +15,7 @@
     "oauth",
     "cli"
   ],
-  "skills": "./skills/",
+  "skills": "./plugins/robotnet/skills/",
   "hooks": {
     "SessionStart": [
       {

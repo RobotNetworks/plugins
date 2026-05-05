@@ -4,23 +4,32 @@ Thanks for helping improve the RobotNet plugins. This repo ships the same RobotN
 
 ## Repository layout
 
-One repo, one plugin root, four per-harness manifests at the top level:
+One repo, one canonical plugin payload under `plugins/robotnet/`, four per-harness manifests at the top level:
 
 ```
-plugins/
+plugins/                                  # repo root
 ├── .claude-plugin/{plugin.json, marketplace.json}
-├── .codex-plugin/plugin.json
-├── .agents/plugins/marketplace.json     # Codex marketplace catalog
 ├── .cursor-plugin/plugin.json
+├── .agents/plugins/marketplace.json      # Codex marketplace catalog
 ├── openclaw.plugin.json
-├── skills/                              # shared skills
-│   ├── install-robotnet-cli/SKILL.md
-│   └── run-robotnet-listener/SKILL.md
+├── plugins/robotnet/                     # canonical plugin payload
+│   ├── .codex-plugin/plugin.json         # Codex manifest (lives inside the payload so codex-plugin's installer finds it)
+│   └── skills/                           # shared skills (consumed by all four harnesses)
+│       ├── install-robotnet-cli/SKILL.md
+│       └── run-robotnet-listener/SKILL.md
+├── hooks/session-start.sh                # Claude Code SessionStart hook
 ├── assets/logo.svg
 └── README.md
 ```
 
-Every harness's manifest points at `./skills/`, so any change to a skill lands in all four plugins at once.
+The Codex marketplace installer (`npx codex-plugin add …`) hard-codes
+`<repo>/plugins/<plugin-name>/` as the source path it copies into
+`~/.codex/plugins/<plugin-name>/`, so the Codex manifest must live
+inside `plugins/robotnet/.codex-plugin/`. The other three harnesses
+read manifests from the repo root and follow the manifest's
+`"skills"` field into `./plugins/robotnet/skills/`. The skills are
+single-source-of-truth — any change lands in all four plugins at
+once with no copy step.
 
 ## Prerequisites
 
@@ -39,19 +48,20 @@ Every harness's manifest points at `./skills/`, so any change to a skill lands i
 
 ## Editing skills
 
-Skills live at `skills/<name>/SKILL.md`. Each skill is a directory containing:
+Skills live at `plugins/robotnet/skills/<name>/SKILL.md`. Each skill is a directory containing:
 
 - `SKILL.md` with YAML frontmatter (`name`, `description`, `allowed-tools`)
 - Optional `references/` subdirectory for long-form reference material
 - Optional `scripts/` subdirectory for supporting scripts
 
-Because `skills/` is shared, changes propagate to all four harnesses. If behavior should differ per harness, gate it inside the skill body (e.g. "In the Claude Code plugin, …").
+Because `plugins/robotnet/skills/` is shared, changes propagate to all four harnesses. If behavior should differ per harness, gate it inside the skill body (e.g. "In the Claude Code plugin, …").
 
 ## Editing manifests
 
 Each harness has its own manifest. Keep metadata (name, description, version, keywords) consistent across all four when possible. If you add a new top-level file, confirm:
 
-- All four manifests still reference `./skills/`.
+- The three root manifests (`.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json`, `openclaw.plugin.json`) still reference `./plugins/robotnet/skills/`.
+- The Codex manifest (`plugins/robotnet/.codex-plugin/plugin.json`) references `./skills/` — relative to its own directory, which is the payload root after `npx codex-plugin add` installs it.
 - The new file is reachable from whatever manifest needs it via a relative path starting with `./`.
 - No manifest path traverses outside the repo root (`../` is not supported by any harness).
 
