@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  layout-check:
+    name: Verify the repo layout matches what each marketplace installer expects
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Codex marketplace structural check
+        # The `npx codex-plugin add` installer hard-codes
+        # `<repo>/plugins/<plugin-name>/` as the source path it copies into
+        # `~/.codex/plugins/<plugin-name>/`. If we ship without that exact
+        # directory in place, every Codex user gets an `ENOENT` and the
+        # plugin is unusable until we patch it. This check fails the PR
+        # before it can ever land that regression.
+        run: |
+          set -euo pipefail
+          test -f .agents/plugins/marketplace.json || {
+            echo "::error::missing .agents/plugins/marketplace.json (Codex marketplace catalog)"
+            exit 1
+          }
+          for name in $(jq -r '.plugins[].name' .agents/plugins/marketplace.json); do
+            payload="plugins/$name"
+            test -d "$payload" || {
+              echo "::error::Codex requires $payload/ to exist (codex-plugin's installer hard-codes this path)"
+              exit 1
+            }
+            test -f "$payload/.codex-plugin/plugin.json" || {
+              echo "::error::missing $payload/.codex-plugin/plugin.json (Codex manifest)"
+              exit 1
+            }
+            test -d "$payload/skills" || {
+              echo "::error::missing $payload/skills/ (consumed by all four harnesses)"
+              exit 1
+            }
+          done
+
+  claude-validate:
+    name: Validate Claude Code manifests with the official validator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - run: npm install -g @anthropic-ai/claude-code
+      - run: claude plugin validate .
+
+  codex-install-smoke:
+    # Codex-plugin clones from `https://github.com/<owner>/<repo>.git` and
+    # passes `--branch <ref>`. For PRs from forks the branch isn't visible
+    # at the upstream, so the install would fail for unrelated reasons.
+    # Gate on same-repo events so this job always has a reachable ref.
+    if: >-
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    name: Install end-to-end via codex-plugin and assert real files landed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Run codex-plugin against this commit's branch
+        env:
+          REF: ${{ github.head_ref || github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          # `--project` scope writes `.agents/plugins/marketplace.json` and
+          # `.codex/plugins/<name>/` into the runner's $PWD instead of $HOME,
+          # which keeps the post-install assertions to plain file checks.
+          # `--yes` skips interactive prompts.
+          npx -y codex-plugin@latest add "$REPO" --project --ref "$REF" --yes
+
+      - name: Assert each plugin's payload landed as real files (not symlinks)
+        # The earlier symlink-based fix attempt failed precisely here:
+        # `cpSync(..., { dereference: true })` produced absolute symlinks
+        # back to codex-plugin's temp clone, which broke the moment the
+        # tool cleaned up its tmpdir. Walk the install tree and fail
+        # loudly on any symlink — installed payloads must be standalone.
+        run: |
+          set -euo pipefail
+          for name in $(jq -r '.plugins[].name' .agents/plugins/marketplace.json); do
+            installed=".codex/plugins/$name"
+            test -d "$installed" || {
+              echo "::error::$installed missing after install"
+              exit 1
+            }
+            symlinks=$(find "$installed" -type l)
+            if [ -n "$symlinks" ]; then
+              echo "::error::$installed contains symlinks (would break after codex-plugin's tmpdir cleanup):"
+              echo "$symlinks"
+              exit 1
+            fi
+            # The Codex manifest must be present at the installed root —
+            # this is what Codex reads to register the plugin.
+            test -f "$installed/.codex-plugin/plugin.json" || {
+              echo "::error::$installed/.codex-plugin/plugin.json missing after install"
+              exit 1
+            }
+          done
