@@ -57,7 +57,7 @@ ln -s "$(pwd)" ~/.openclaw/plugins/robotnet
 
 ## Requirements
 
-The `run-robotnet-listener` skill needs the `@robotnetworks/robotnet` CLI on `PATH`:
+The `run-robotnet-listener` skill needs the `@robotnetworks/robotnet` CLI on `PATH`, version **0.2.6 or newer**:
 
 ```bash
 npm install -g @robotnetworks/robotnet

@@ -1,7 +1,7 @@
 {
   "id": "robotnet",
   "name": "RobotNet",
-  "version": "1.0.3",
+  "version": "1.0.9",
   "description": "CLI-first RobotNet workflows for OpenClaw.",
   "skills": ["./plugins/robotnet/skills/install-robotnet-cli", "./plugins/robotnet/skills/run-robotnet-listener"],
   "configSchema": {
