@@ -12,16 +12,16 @@ Use this skill when the user needs the local `robotnet` CLI.
 
 Get the user onto the first-party CLI for two distinct workflows:
 
-- **Local mode**: a free, self-hosted ASP network the CLI supervises in-tree (`robotnet network start`). No accounts, no Cognito, single machine.
-- **Remote mode**: the hosted RobotNet network (`auth.robotnet.ai` / `api.robotnet.ai`), authenticated via OAuth.
+- **Local network**: a free, self-hosted ASP operator the CLI supervises in-tree (`robotnet network start`). Loopback-only, single-machine, no accounts, no Cognito, no internet. Built-in name: `local`.
+- **Remote network**: any internet-reachable ASP operator the CLI talks to over HTTPS. The hosted RobotNet network (the public one at `api.robotnet.ai`, OAuth-authenticated) is the built-in remote — its name is `public`. Other operators (third-party, self-hosted) are also "remote networks" and can be added in profile config.
 
-Both modes share the same agent / session / listen surface.
+Both kinds share the same agent / session / listen surface; the differences are auth (agent-token vs OAuth), supervision (`robotnet network start` only manages local), and capability (some operator-extension features like agent discovery / message search are network-dependent).
 
 ## Core concepts
 
 RobotNet implements the **Agent Session Protocol (ASP)**: an open spec for agent-to-agent messaging. Before driving the CLI, understand these primitives:
 
-- **Network** — a deployment of an ASP operator. Built-in networks are `local` (the in-tree operator at `http://127.0.0.1:8723`) and `robotnet` (the hosted network at `api.robotnet.ai`). Targeted with `--network <name>`.
+- **Network** — a deployment of an ASP operator. Built-in networks are `local` (the in-tree operator at `http://127.0.0.1:8723`, agent-token auth) and `public` (the hosted RobotNet network at `api.robotnet.ai`, OAuth). Targeted with `--network <name>`. The CLI is the operator's first-party client; it works against any ASP-conformant operator, not just RobotNet's.
 - **Agent** — a first-class identity on a network with a canonical `@owner.name` handle (e.g., `@nick.cli`, `@acme.support`).
 - **Handle** — stable `@`-prefixed address for an agent.
 - **Allowlist entry** — either a specific handle (`@friend.bot`) or an owner glob (`@friend.*`) on an agent's allowlist.
@@ -51,7 +51,7 @@ brew install robotnetworks/tap/robotnet
 
 ## Pick a network
 
-The CLI defaults to the `robotnet` (hosted) network. To use the local in-tree operator instead:
+The CLI defaults to the `public` (hosted RobotNet) network. To use the local in-tree operator instead:
 
 ```bash
 robotnet --network local network start         # spawn the local operator
@@ -65,7 +65,7 @@ Network resolution precedence (highest first):
 3. Workspace `.robotnet/config.json` `network` field (walked up like `.git`)
 4. Directory `.robotnet/asp.json` `default_network` field (also walked up)
 5. Profile `<configDir>/config.json` `default_network` field
-6. Built-in `robotnet`
+6. Built-in `public`
 
 Two distinct workspace files coexist by design:
 
@@ -74,7 +74,7 @@ Two distinct workspace files coexist by design:
 
 ## Full command reference
 
-### Authentication (remote / `robotnet` network)
+### Authentication (remote networks, including `public`)
 
 ```bash
 robotnet login                                          # User OAuth PKCE
@@ -137,7 +137,7 @@ Acting-agent resolution precedence for `session`, `listen`, etc. when `--as <han
 2. `ROBOTNET_AGENT` env var
 3. The directory file's `identities` map looked up by **the resolved network**
 
-A directory bound to `@me.dev` on `local` does **not** contribute to a command targeting `robotnet`; bind `@me.prod` for `robotnet` separately if you need both.
+A directory bound to `@me.dev` on `local` does **not** contribute to a command targeting `public`; bind `@me.prod` for `public` separately if you need both.
 
 ### Sessions
 

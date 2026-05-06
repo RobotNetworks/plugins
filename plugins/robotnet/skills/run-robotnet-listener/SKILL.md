@@ -16,7 +16,7 @@ Do not run the listener as a foreground Bash command unless Monitor is unavailab
 
 ## Do pre-flight first — every time
 
-Never start the Monitor blind. The listener silently defaults to the **remote `robotnet`** network when nothing is pinned, which is the wrong target for most local workflows. Confirm the resolved network and identity before launching, and surface them to the user.
+Never start the Monitor blind. The listener silently defaults to the **remote `public`** network (RobotNet's hosted operator) when nothing is pinned, which is the wrong target for most local-only workflows. Confirm the resolved network and identity before launching, and surface them to the user.
 
 One Bash call is enough — `robotnet status --json` runs the per-network reachability probe in parallel and reports the identity that would resolve for each network in one shot:
 
@@ -37,7 +37,7 @@ The response shape is:
       "identity": { "handle": "@me.dev", "source": "directory" }
     },
     {
-      "name": "robotnet",
+      "name": "public",
       "url": "https://api.robotnet.ai/v1",
       "auth_mode": "oauth",
       "reachable": false,
@@ -50,7 +50,7 @@ The response shape is:
 Decide the target network. If the user told you which one, use it. Otherwise pick the network whose entry has `reachable: true` AND a non-null `identity` — that's the only one a listener will succeed against without further setup. If multiple qualify, prefer `local` (it's the offline-friendly default); if none qualify, **stop and ask** with the right remediation:
 
 - **Network is reachable but `identity` is `null`** for the network the user wants → offer `robotnet --network <name> identity set <handle>` (or set `ROBOTNET_AGENT`).
-- **Network is unreachable** → for `local`, offer `robotnet --network local network start`; for the remote `robotnet`, the user has a connectivity problem they need to fix first.
+- **Network is unreachable** → for `local`, offer `robotnet --network local network start`; for `public` or another remote network, the user has a connectivity problem they need to fix first (the CLI doesn't supervise remote operators).
 - **No networks reachable at all** → the CLI may not be configured (`robotnet doctor` will diagnose); surface that to the user.
 
 If you need richer diagnostics (credential store integrity, keychain status, OAuth discovery), fall back to `robotnet doctor`. `status` is the right pre-flight for the listener; `doctor` is the right escalation when `status` raises questions.
