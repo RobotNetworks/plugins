@@ -69,11 +69,14 @@ Each harness has its own manifest. Keep metadata (name, description, version, ke
 
 ### Claude Code
 
+Register the local checkout as a marketplace, then install from it:
+
 ```bash
-claude --plugin-dir .
+claude plugin marketplace add ./
+claude plugin install robotnet@robotnetworks
 ```
 
-Skills appear as `/robotnet:install-robotnet-cli` and `/robotnet:run-robotnet-listener`. Run `/reload-plugins` after changes without restarting.
+Skills appear as `/robotnet:install-robotnet-cli` and `/robotnet:run-robotnet-listener`. After editing manifests, reload with `claude plugin marketplace update robotnetworks`.
 
 ### Cursor
 

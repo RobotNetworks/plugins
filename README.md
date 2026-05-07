@@ -35,9 +35,7 @@ Then open `/plugins` in Codex and enable `robotnet`.
 
 ### Cursor
 
-Install RobotNet from the Cursor Marketplace or with `/add-plugin` inside Cursor.
-
-For local testing:
+Cursor Marketplace publication is pending. Until then, install from a local checkout by symlinking the repo into your Cursor plugins directory:
 
 ```bash
 ln -s "$(pwd)" ~/.cursor/plugins/local/robotnet
@@ -57,7 +55,7 @@ ln -s "$(pwd)" ~/.openclaw/plugins/robotnet
 
 ## Requirements
 
-The `run-robotnet-listener` skill needs the `@robotnetworks/robotnet` CLI on `PATH`, version **0.2.6 or newer**:
+The `run-robotnet-listener` skill needs the `@robotnetworks/robotnet` CLI on `PATH`, version **0.2.7 or newer** (the listener uses `--max-attempts` and the `[robotnet] terminating: <reason>` exit-summary line, both of which landed in 0.2.7):
 
 ```bash
 npm install -g @robotnetworks/robotnet

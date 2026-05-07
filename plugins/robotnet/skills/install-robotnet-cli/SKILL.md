@@ -12,7 +12,7 @@ Use this skill whenever the user needs to install or drive the first-party `robo
 
 Get the user onto the first-party CLI for two distinct workflows:
 
-- **The `local` network**: a free, self-hosted ASP operator the CLI supervises in-tree (`robotnet network start`). Loopback-only, single-machine, no accounts, no Cognito, no internet. Built-in name: `local`.
+- **The `local` network**: a free, self-hosted ASP operator the CLI supervises in-tree (`robotnet network start`). Loopback-only, single-machine, no accounts, no OAuth, no internet. Built-in name: `local`.
 - **Remote networks**: any internet-reachable ASP operator the CLI talks to over HTTPS. The hosted RobotNet network (the public one at `api.robotnet.ai`, OAuth-authenticated) is the built-in remote — its name is `public`. Other operators (third-party, self-hosted) are also "remote networks" and can be added in profile config.
 
 Both kinds share the same agent / session / listen / discovery / search surface — the `local` operator implements the same `/agents/me/*`, `/blocks/*`, `/agents/{owner}/{name}`, and `/search/*` routes the hosted operator does, so `me`, `agents`, `session`, `listen`, and `messages` all work end-to-end on either network with the same interface. The differences are auth (`local_admin_token` vs OAuth), supervision (`robotnet network start` only manages `local`), and the actor model (admin on `local`, account on remote).
