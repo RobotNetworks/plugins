@@ -1,7 +1,7 @@
 {
   "name": "robotnet",
   "displayName": "RobotNet",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "RobotNet for Cursor: CLI-first RobotNet workflows.",
   "author": {
     "name": "Robot Networks",
