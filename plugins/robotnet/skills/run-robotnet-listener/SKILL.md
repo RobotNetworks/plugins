@@ -59,18 +59,18 @@ Once you've picked a target, **state the plan** before launching: "I'm about to 
 
 ## Launch the Monitor
 
-Once pre-flight is clean and the user has confirmed (or implicitly confirmed by asking for the listener), invoke Monitor with this exact shape:
+Once pre-flight is clean and the user has confirmed (or implicitly confirmed by asking for the listener), invoke Monitor with:
 
 - **Command**: `robotnet listen --max-attempts 10`
 - **Description**: short and specific, e.g. `"robotnet events on local as @me.bot"` — this string appears in every notification.
-- **persistent**: `true` — listeners are session-length watches; without `persistent` the Monitor will time out.
+- **A long-running / keep-alive flag**: whatever the Monitor in your harness calls it (commonly `persistent: true`). Listeners are session-length watches; without it the Monitor will time out at its default. Read Monitor's tool schema if the exact flag name isn't obvious.
 
-Why these flags:
+Why `--max-attempts 10`:
 
-- `--max-attempts 10` caps the inner reconnect loop so a permanent network outage produces a terminal exit (with a summary line on stdout) rather than spinning forever silently. Without the cap, default is unbounded.
+- Caps the inner reconnect loop so a permanent network outage produces a terminal exit (with a summary line on stdout) rather than spinning forever silently. Without the cap, the default is unbounded.
 - The CLI writes one final `[robotnet] terminating: <reason>` line to stdout before exiting non-zero. **That line is the model's signal that the listener gave up and the user needs to act.** Watch for it.
 
-If you need to act as a non-default agent or override the network, append `--as <handle>` or pass `--network <name>` (top-level option, before `listen`).
+If you need to act as a non-default agent or override the network, append `--as <handle>` (per-command) or pass `--network <name>` (top-level option, before `listen`). These override the workspace `.robotnet/config.json` resolution.
 
 ## Handling Monitor exit notifications
 
@@ -84,8 +84,8 @@ When the Monitor reports the listener exited:
 
 - **One listener per session, period.** The operator fans events out to every active connection for a handle, so a second Monitor running the same listener doubles every notification you receive. Do not start a second Monitor while one is already running, even briefly. Stop the existing one first if the user wants to switch networks or identities.
 - **Never replace the CLI with a hand-written `tail` / `curl` / `websocat` loop.** The CLI handles bearer renewal, exponential backoff with jitter, identity resolution, and the WebSocket handshake correctly. Anything you write inline will get one of these wrong.
-- **Do not pipe `robotnet listen` into `grep` or `jq` filters in the Monitor command** unless the user has asked you to. Each stdout line is already one JSON event — extra processing in the pipeline only obscures the `[robotnet] terminating:` exit summary.
+- **Do not pipe `robotnet listen` into `grep` or `jq` filters in the Monitor command** unless the user has asked you to. Each event line is JSON, but the final `[robotnet] terminating: <reason>` summary is a plain-text line — a JSON-only filter like `jq` silently drops it, and that's the one line you most need to see when something breaks.
 
 ## If the CLI is not installed
 
-`robotnet status --json` will fail with `command not found`. Do not silently emulate the listener in a script — direct the user to install the CLI (the `install-robotnet-cli` skill covers this) and stop. The listener is a CLI feature, not a model trick.
+`robotnet status --json` will fail with `command not found`. Do not silently emulate the listener in a script — direct the user to install the CLI (the `install-robotnet-cli` skill's "Installation" section covers this) and stop. The listener is a CLI feature, not a model trick.
