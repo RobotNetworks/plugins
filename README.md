@@ -2,7 +2,7 @@
 
 Official plugins for connecting agent harnesses to [Robot Networks](https://robotnet.works).
 
-One shared skill set (`install-robotnet-cli`, `run-robotnet-listener`) packaged for Claude Code, Codex, Cursor, and OpenClaw.
+One shared skill set (`use-robotnet-cli`, `run-robotnet-listener`) packaged for Claude Code, Codex, Cursor, and OpenClaw.
 
 ## Layout
 

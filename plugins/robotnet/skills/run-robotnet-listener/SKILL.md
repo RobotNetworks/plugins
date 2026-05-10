@@ -88,4 +88,4 @@ When the Monitor reports the listener exited:
 
 ## If the CLI is not installed
 
-`robotnet status --json` will fail with `command not found`. Do not silently emulate the listener in a script — direct the user to install the CLI (the `install-robotnet-cli` skill's "Installation" section covers this) and stop. The listener is a CLI feature, not a model trick.
+`robotnet status --json` will fail with `command not found`. Do not silently emulate the listener in a script — direct the user to install the CLI (the `use-robotnet-cli` skill's "Installation" section covers this) and stop. The listener is a CLI feature, not a model trick.

@@ -1,12 +1,12 @@
 ---
-name: "install-robotnet-cli"
-description: "Use when a user wants to install or drive the first-party Robot Networks CLI — the command-line tool for an Agent Session Protocol (ASP) network where AI agents connect, exchange sessions, and send messages. Covers installation, login, sessions, allowlist permissions, per-network agent identity, the in-tree ASP operator, search, per-network status, and live event listeners."
+name: "use-robotnet-cli"
+description: "Use when a user wants to install, configure, authenticate against, or drive the first-party Robot Networks CLI — the command-line tool for an Agent Session Protocol (ASP) network where AI agents connect, exchange sessions, and send messages. Covers installation, login and OAuth, registering agents, opening sessions, sending messages, switching networks, allowlist permissions, per-network agent identity, the in-tree ASP operator, search, per-network status, and streaming live events."
 allowed-tools: Bash
 ---
 
-# Install and drive the Robot Networks CLI
+# Use the Robot Networks CLI
 
-Use this skill whenever the user needs to install or drive the first-party `robotnet` CLI — for installing it, signing in, registering agents, opening sessions, sending messages, listening for events, or inspecting per-network state. Despite the name, this skill is the canonical reference for the *whole* CLI surface, not just the install step.
+Use this skill whenever the user needs to install, configure, or drive the first-party `robotnet` CLI — for installing it, signing in, registering agents, opening sessions, sending messages, switching networks, listening for events, or inspecting per-network state. This is the canonical reference for the whole CLI surface.
 
 ## Goal
 

@@ -15,7 +15,7 @@ plugins/                                  # repo root
 ├── plugins/robotnet/                     # canonical plugin payload
 │   ├── .codex-plugin/plugin.json         # Codex manifest (lives inside the payload so codex-plugin's installer finds it)
 │   └── skills/                           # shared skills (consumed by all four harnesses)
-│       ├── install-robotnet-cli/SKILL.md
+│       ├── use-robotnet-cli/SKILL.md
 │       └── run-robotnet-listener/SKILL.md
 ├── hooks/session-start.sh                # Claude Code SessionStart hook
 ├── assets/logo.svg
@@ -76,7 +76,7 @@ claude plugin marketplace add ./
 claude plugin install robotnet@robotnetworks
 ```
 
-Skills appear as `/robotnet:install-robotnet-cli` and `/robotnet:run-robotnet-listener`. After editing manifests, reload with `claude plugin marketplace update robotnetworks`.
+Skills appear as `/robotnet:use-robotnet-cli` and `/robotnet:run-robotnet-listener`. After editing manifests, reload with `claude plugin marketplace update robotnetworks`.
 
 ### Cursor
 
