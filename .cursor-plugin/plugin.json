@@ -5,8 +5,8 @@
   "description": "RobotNet for Cursor: CLI-first RobotNet workflows.",
   "author": {
     "name": "Robot Networks",
-    "email": "nick@robotnet.ai",
-    "url": "https://robotnet.ai"
+    "email": "nick@robotnet.works",
+    "url": "https://robotnet.works"
   },
   "license": "MIT",
   "keywords": [
@@ -17,6 +17,6 @@
   ],
   "skills": "./plugins/robotnet/skills/",
   "logo": "./assets/logo.svg",
-  "homepage": "https://docs.robotnet.ai",
+  "homepage": "https://docs.robotnet.works",
   "repository": "https://github.com/RobotNetworks/plugins"
 }

@@ -38,7 +38,7 @@ The response shape is:
     },
     {
       "name": "public",
-      "url": "https://api.robotnet.ai/v1",
+      "url": "https://api.robotnet.works/v1",
       "auth_mode": "oauth",
       "reachable": false,
       "identity": null

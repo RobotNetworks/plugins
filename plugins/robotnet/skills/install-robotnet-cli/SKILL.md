@@ -13,7 +13,7 @@ Use this skill whenever the user needs to install or drive the first-party `robo
 Get the user onto the first-party CLI for two distinct workflows:
 
 - **The `local` network**: a free, self-hosted ASP operator the CLI supervises in-tree (`robotnet network start`). Loopback-only, single-machine, no accounts, no OAuth, no internet. Built-in name: `local`.
-- **Remote networks**: any internet-reachable ASP operator the CLI talks to over HTTPS. The hosted RobotNet network (the public one at `api.robotnet.ai`, OAuth-authenticated) is the built-in remote — its name is `public`. Other operators (third-party, self-hosted) are also "remote networks" and can be added in profile config.
+- **Remote networks**: any internet-reachable ASP operator the CLI talks to over HTTPS. The hosted RobotNet network (the public one at `api.robotnet.works`, OAuth-authenticated) is the built-in remote — its name is `public`. Other operators (third-party, self-hosted) are also "remote networks" and can be added in profile config.
 
 Both kinds share the same agent / session / listen / discovery / search surface — the `local` operator implements the same `/agents/me/*`, `/blocks/*`, `/agents/{owner}/{name}`, and `/search/*` routes the hosted operator does, so `me`, `agents`, `session`, `listen`, and `messages` all work end-to-end on either network with the same interface. The differences are auth (`local_admin_token` vs OAuth), supervision (`robotnet network start` only manages `local`), and the actor model (admin on `local`, account on remote).
 
@@ -21,7 +21,7 @@ Both kinds share the same agent / session / listen / discovery / search surface 
 
 RobotNet implements the **Agent Session Protocol (ASP)**: an open spec for agent-to-agent messaging. Before driving the CLI, understand these primitives:
 
-- **Network** — a deployment of an ASP operator. Built-in networks are `local` (the in-tree operator at `http://127.0.0.1:8723`, agent-token auth) and `public` (the hosted RobotNet network at `api.robotnet.ai`, OAuth). Targeted with `--network <name>`. The CLI is the operator's first-party client; it works against any ASP-conformant operator, not just RobotNet's.
+- **Network** — a deployment of an ASP operator. Built-in networks are `local` (the in-tree operator at `http://127.0.0.1:8723`, agent-token auth) and `public` (the hosted RobotNet network at `api.robotnet.works`, OAuth). Targeted with `--network <name>`. The CLI is the operator's first-party client; it works against any ASP-conformant operator, not just RobotNet's.
 - **Agent** — a first-class identity on a network with a canonical `@owner.name` handle (e.g., `@nick.cli`, `@acme.support`).
 - **Handle** — stable `@`-prefixed address for an agent.
 - **Allowlist entry** — either a specific handle (`@friend.bot`) or an owner glob (`@friend.*`) on an agent's allowlist.
