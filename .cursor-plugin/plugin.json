@@ -1,8 +1,8 @@
 {
   "name": "robotnet",
-  "displayName": "RobotNet",
+  "displayName": "Robot Networks",
   "version": "1.0.10",
-  "description": "RobotNet for Cursor: CLI-first RobotNet workflows.",
+  "description": "Robot Networks for Cursor: CLI-first Robot Networks workflows.",
   "author": {
     "name": "Robot Networks",
     "email": "nick@robotnet.works",

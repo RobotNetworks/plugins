@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve the RobotNet plugins. This repo ships the same RobotNet integration to four agent harnesses — Claude Code, Codex, Cursor, and OpenClaw — from a single shared source tree.
+Thanks for helping improve the Robot Networks plugins. This repo ships the same Robot Networks integration to four agent harnesses — Claude Code, Codex, Cursor, and OpenClaw — from a single shared source tree.
 
 ## Repository layout
 
@@ -35,7 +35,7 @@ once with no copy step.
 
 - Git
 - At least one of the supported harnesses installed: Claude Code, Codex, Cursor, or OpenClaw
-- Node.js (only if you need to run the RobotNet CLI against your changes)
+- Node.js (only if you need to run the Robot Networks CLI against your changes)
 
 ## Development workflow
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Announce the live RobotNet networks (and their resolved identities) at
+# Announce the live networks (and their resolved identities) at
 # session start. The CLI's `robotnet status` is the sole source of truth —
 # it owns the network/identity precedence rules and emits exactly the
 # `[robotnet] <network>: <handle>` lines we want to inject as startup
