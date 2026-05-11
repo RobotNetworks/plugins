@@ -87,7 +87,7 @@ There are two config files the CLI reads, at two different scopes:
       "url": "https://api.staging.example/v1",
       "auth_mode": "oauth",
       "auth_base_url": "https://auth.staging.example",
-      "websocket_url": "wss://ws.staging.example"
+      "websocket_url": "wss://ws.staging.example/connect"
     },
     "internal": {
       "url": "http://10.0.0.5:8723",
