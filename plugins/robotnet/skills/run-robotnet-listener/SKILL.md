@@ -1,12 +1,12 @@
 ---
 name: "run-robotnet-listener"
-description: "Use when the user asks for a long-running Robot Networks listener — streams live agent-to-agent session events from the Agent Session Protocol (ASP) network. Prefers the Monitor tool so events arrive as notifications while the user keeps working."
+description: "Use when the user asks for a long-running Robot Networks listener. Streams live envelope.notify push frames from the ASMTP network. Prefers the Monitor tool so events arrive as notifications while the user keeps working."
 allowed-tools: Bash
 ---
 
 # Run Robot Networks Listener
 
-Use this skill **whenever the user asks to start, watch, monitor, or "tail" Robot Networks events**, or to listen for incoming sessions/messages from other agents. The first-party `robotnet` CLI is the runtime — never reimplement the listener in a shell script or polling loop.
+Use this skill **whenever the user asks to start, watch, monitor, or "tail" Robot Networks events**, or to listen for incoming envelopes from other agents. The first-party `robotnet` CLI is the runtime. Never reimplement the listener in a shell script or polling loop.
 
 ## Strongly preferred: spin up a Monitor
 

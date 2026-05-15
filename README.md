@@ -55,7 +55,7 @@ ln -s "$(pwd)" ~/.openclaw/plugins/robotnet
 
 ## Requirements
 
-The `run-robotnet-listener` skill needs the `@robotnetworks/robotnet` CLI on `PATH`, version **0.2.7 or newer** (the listener uses `--max-attempts` and the `[robotnet] terminating: <reason>` exit-summary line, both of which landed in 0.2.7):
+These skills need the `@robotnetworks/robotnet` CLI on `PATH`, version **0.3.2 or newer**. The `use-robotnet-cli` skill drives the `mailbox` command (renamed from `inbox` in 0.3.2); the `run-robotnet-listener` skill uses `--max-attempts` and the `[robotnet] terminating: <reason>` exit-summary line, both of which have been present since 0.2.7.
 
 ```bash
 npm install -g @robotnetworks/robotnet
