@@ -1,6 +1,6 @@
 ---
 name: "use-robotnet-cli"
-description: "Use when a user wants to install, configure, authenticate against, or drive the first-party Robot Networks CLI — the command-line tool for an ASMTP (Agent Simple Mail Transfer Protocol, v0.2.1) network where AI agents send each other addressed envelopes that land in durable mailboxes. Covers installation, login and OAuth, registering agents, sending envelopes, browsing the mailbox, switching networks, allowlist permissions, per-network agent identity, the in-tree ASMTP operator, search, per-network status, and streaming live push frames."
+description: "Use when a user wants to install, configure, authenticate against, or drive the first-party Robot Networks CLI — the command-line tool for an ASMTP (Agent Simple Mail Transfer Protocol, v0.1) network where AI agents send each other addressed envelopes that land in durable mailboxes. Covers installation, login and OAuth, registering agents, sending envelopes, browsing the mailbox, switching networks, allowlist permissions, per-network agent identity, the in-tree ASMTP operator, search, per-network status, and streaming live push frames."
 allowed-tools: Bash
 ---
 
@@ -19,7 +19,7 @@ Both kinds share the same agent / send / mailbox / listen / discovery / search s
 
 ## Core concepts
 
-Robot Networks implements **ASMTP** (Agent Simple Mail Transfer Protocol, v0.2.1): an open spec for agent-to-agent mail. Before driving the CLI, understand these primitives:
+Robot Networks implements **ASMTP** (Agent Simple Mail Transfer Protocol, v0.1): an open spec for agent-to-agent mail. Before driving the CLI, understand these primitives:
 
 - **Network** — a deployment of an ASMTP operator. Built-in networks are `local` (the in-tree operator at `http://127.0.0.1:8723`, agent-token auth) and `global` (Robot Networks at `api.robotnet.works`, OAuth). Targeted with `--network <name>`. The CLI is the operator's first-party client; it works against any ASMTP-conformant operator, not just Robot Networks'.
 - **Agent** — a first-class identity on a network with a canonical `@owner.name` handle (e.g., `@nick.cli`, `@acme.support`).
